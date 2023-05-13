@@ -6,7 +6,7 @@ function App() {
   const [response, setResponse] = useState("");
 
   const handleSubmit = async () => {
-    const result = await fetch("http://localhost:8080/submit", {
+    const result = await fetch("http://localhost:8080/api/submit", {
       method: "POST",
       body: input,
       headers: {
