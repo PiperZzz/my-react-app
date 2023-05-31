@@ -12,7 +12,7 @@ function App() {
 
   const [response, setResponse] = useState("");
 
-  const handleSubmit = async () => {
+  const handleRegister = async () => {
     const result = await fetch("http://localhost:8080/api/submit", {
       method: "POST",
       body: JSON.stringify(input),
@@ -50,7 +50,7 @@ function App() {
           onChange={(e) => setInput({ ...input, email: e.target.value })}
           placeholder="Enter an email"
         />
-        <button onClick={handleSubmit}>Submit</button>
+        <button onClick={handleRegister}>Register</button>
         <h1>{response}</h1>
         <input
           type="text"
