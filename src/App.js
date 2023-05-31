@@ -2,20 +2,23 @@ import React, { useState } from "react";
 import "./App.css";
 
 function App() {
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState({
+    username: "",
+    email: "",
+  });
   const [response, setResponse] = useState("");
 
   const handleSubmit = async () => {
     const result = await fetch("http://localhost:8080/api/submit", {
       method: "POST",
-      body: input,
+      body: JSON.stringify(input),
       headers: {
-        "Content-Type": "text/plain",
+        "Content-Type": "application/json",
       },
     });
 
-    const modifiedInput = await result.text();
-    setResponse(modifiedInput);
+    const modifiedInput = await result.json();
+    setResponse(modifiedInput.message);
   };
 
   return (
@@ -23,9 +26,15 @@ function App() {
       <header className="App-header">
         <input
           type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Enter a string"
+          value={input.username}
+          onChange={(e) => setInput({ ...input, username: e.target.value })}
+          placeholder="Enter a username"
+        />
+        <input
+          type="email"
+          value={input.email}
+          onChange={(e) => setInput({ ...input, email: e.target.value })}
+          placeholder="Enter an email"
         />
         <button onClick={handleSubmit}>Submit</button>
         <h1>{response}</h1>
