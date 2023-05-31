@@ -6,6 +6,10 @@ function App() {
     username: "",
     email: "",
   });
+
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+
   const [response, setResponse] = useState("");
 
   const handleSubmit = async () => {
@@ -19,6 +23,16 @@ function App() {
 
     const modifiedInput = await result.json();
     setResponse(modifiedInput.message);
+  };
+
+  const handlefindUsername = async () => {
+    const response = await fetch(`http://localhost:8080/api/username?email=${email}`);
+    if (response.ok) {
+      const data = await response.text();
+      setUsername(data);
+    } else {
+      setUsername("User not found");
+    }
   };
 
   return (
@@ -38,6 +52,14 @@ function App() {
         />
         <button onClick={handleSubmit}>Submit</button>
         <h1>{response}</h1>
+        <input
+          type="text"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Enter an email"
+        />
+        <button onClick={handlefindUsername}>Get Username</button>
+        <h1>{username}</h1>
       </header>
     </div>
   );
