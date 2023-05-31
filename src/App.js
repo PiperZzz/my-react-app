@@ -13,19 +13,41 @@ function App() {
   const [response, setResponse] = useState("");
 
   const handleRegister = async () => {
-    const result = await fetch("http://localhost:8080/api/submit", {
-      method: "POST",
-      body: JSON.stringify(input),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    if (input.username.trim() === "" || input.email.trim() === "") {
+      setResponse("Please enter both username and email.");
+      return;
+    }
 
-    const modifiedInput = await result.json();
-    setResponse(modifiedInput.message);
+    const emailRegex = /^\S+@\S+\.\S+$/;
+    if (!emailRegex.test(input.email)) {
+      setResponse("Please enter a valid email address.");
+      return;
+    }
+
+    try {
+      const result = await fetch("http://localhost:8080/api/submit", {
+        method: "POST",
+        body: JSON.stringify(input),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const modifiedInput = await result.json();
+      setResponse(modifiedInput.message);
+    } catch (error) {
+      console.error(error);
+      setResponse("An error occurred.");
+    }
   };
 
   const handlefindUsername = async () => {
+    const emailRegex = /^\S+@\S+\.\S+$/;
+    if (!emailRegex.test(email)) {
+      setUsername("Please enter a valid email address.");
+      return;
+    }
+
     const response = await fetch(`http://localhost:8080/api/username?email=${email}`);
     if (response.ok) {
       const data = await response.text();
