@@ -64,6 +64,7 @@ function App() {
 
       if (result.ok) {
         const data = await result.json();
+        localStorage.setItem('token', data.token);
         setLoginResponse("Your token is: " + data.token);
       } else {
         setLoginResponse("Failed to log in. Please check your username and password.");
@@ -82,7 +83,14 @@ function App() {
       return;
     }
 
-    const response = await fetch(`http://localhost:8080/api/username?email=${email}`);
+    const token = localStorage.getItem('token');
+
+    const response = await fetch(`http://localhost:8080/api/username?email=${email}`, {
+        headers: {
+            'Authorization': 'Bearer ' + token,
+        },
+    });
+
     if (response.ok) {
       const data = await response.text();
       setUsername(data);
@@ -90,6 +98,7 @@ function App() {
       setUsername("User not found");
     }
   };
+
 
   return (
     <div className="App">
