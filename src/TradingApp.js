@@ -1,25 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import CryptoChart from './CryptoChart';
-import { mockPriceData } from './API';
+import { mockPriceData, mockUserData } from './API'; 
 
 function TradingApp() {
-    const data = mockPriceData;
     const [priceData, setPriceData] = useState([]);
     const [latestPrice, setLatestPrice] = useState(null);
-
+    const [balance, setBalance] = useState(mockUserData.balance);
+    const [btc, setBtc] = useState(mockUserData.holdings.BTC);
     useEffect(() => {
-        setPriceData(data);
-        setLatestPrice(data[data.length - 1].close);
+        setPriceData(mockPriceData);
+        setLatestPrice(mockPriceData[mockPriceData.length - 1].value);
     }, []);
 
     const handleBuy = () => {
-        console.log(`Buy at price: ${latestPrice}`);
-        // Implement your buying logic here
+        const amountToBuy = balance / latestPrice;
+        setBalance(0);
+        setBtc(btc + amountToBuy);
     };
 
     const handleSell = () => {
-        console.log(`Sell at price: ${latestPrice}`);
-        // Implement your selling logic here
+        const amountToSell = btc;
+        setBalance(balance + amountToSell * latestPrice);
+        setBtc(0);
     };
 
     return (
@@ -28,6 +30,12 @@ function TradingApp() {
             <input type="text" value={latestPrice || ''} readOnly />
             <button onClick={handleBuy}>Buy</button>
             <button onClick={handleSell}>Sell</button>
+            <div>
+                Balance: {balance.toFixed(2)} USD
+            </div>
+            <div>
+                BTC: {btc.toFixed(8)}
+            </div>
         </div>
     );
 }

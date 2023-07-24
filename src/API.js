@@ -33,7 +33,7 @@ const mockPriceData = [
 
 const mockUserData = {
     balance: 10000,
-    holdings: { BTC: 0, ETH: 0, LTC: 0 },
+    holdings: { BTC: 1, ETH: 0, LTC: 0 },
 };
 
 export { mockPriceData, mockUserData };
