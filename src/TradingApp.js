@@ -9,7 +9,7 @@ function TradingApp() {
 
     useEffect(() => {
         setPriceData(data);
-        setLatestPrice(data[data.length - 1].value);
+        setLatestPrice(data[data.length - 1].close);
     }, []);
 
     const handleBuy = () => {
