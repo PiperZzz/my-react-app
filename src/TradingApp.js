@@ -1,33 +1,54 @@
 import React, { useState, useEffect } from 'react';
 import CryptoChart from './CryptoChart';
-import { mockPriceData, mockUserData } from './API'; 
+import { mockPriceData, mockUserData } from './API';
 
 function TradingApp() {
-    const [priceData, setPriceData] = useState([]);
+    const [priceData, setPriceData] = useState(mockPriceData);
     const [latestPrice, setLatestPrice] = useState(null);
-    const [balance, setBalance] = useState(mockUserData.balance);
-    const [btc, setBtc] = useState(mockUserData.holdings.BTC);
+    const [inputPrice, setInputPrice] = useState(null); // User input price
+    const [inputAmount, setInputAmount] = useState(null); // User input amount
+    const [balance, setBalance] = useState(mockUserData.balance); // User's balance in USD
+    const [btc, setBtc] = useState(mockUserData.holdings.BTC); // User's BTC amount
+
     useEffect(() => {
-        setPriceData(mockPriceData);
-        setLatestPrice(mockPriceData[mockPriceData.length - 1].value);
-    }, []);
+        setLatestPrice(priceData[priceData.length - 1].close);
+    }, [priceData]);
 
     const handleBuy = () => {
-        const amountToBuy = balance / latestPrice;
-        setBalance(0);
-        setBtc(btc + amountToBuy);
+        const cost = inputAmount * inputPrice; // Cost of buying the input amount at the input price
+        if (cost <= balance) {
+            setBalance(balance - cost);
+            setBtc(btc + parseFloat(inputAmount));
+        } else {
+            alert('Not enough balance');
+        }
     };
 
     const handleSell = () => {
-        const amountToSell = btc;
-        setBalance(balance + amountToSell * latestPrice);
-        setBtc(0);
+        if (inputAmount <= btc) {
+            const earnings = inputAmount * inputPrice; // Earnings from selling the input amount at the input price
+            setBalance(balance + earnings);
+            setBtc(btc - parseFloat(inputAmount));
+        } else {
+            alert('Not enough BTC');
+        }
     };
 
     return (
         <div>
             <CryptoChart data={priceData} />
-            <input type="text" value={latestPrice || ''} readOnly />
+            <input 
+                type="text" 
+                value={inputPrice || ''} 
+                onChange={e => setInputPrice(e.target.value)}
+                placeholder="Price"
+            />
+            <input 
+                type="text" 
+                value={inputAmount || ''} 
+                onChange={e => setInputAmount(e.target.value)}
+                placeholder="Amount"
+            />
             <button onClick={handleBuy}>Buy</button>
             <button onClick={handleSell}>Sell</button>
             <div>
