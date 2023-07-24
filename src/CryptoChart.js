@@ -17,14 +17,14 @@ function CryptoChart({ data }) {
                 },
             },
         });
-        const lineSeries = chart.addLineSeries();
+        const candleSeries = chart.addCandlestickSeries();
 
-        lineSeries.setData(data);
+        candleSeries.setData(data);
 
         // Set visible range to start from the first data point
-        const from = data[0].time;
-        const to = data[data.length - 1].time;
-        chart.timeScale().setVisibleRange({ from, to });
+        // const from = data[0].time;
+        // const to = data[data.length - 1].time;
+        // chart.timeScale().setVisibleRange({ from, to });
 
         return () => chart.remove();
     }, [data]);
