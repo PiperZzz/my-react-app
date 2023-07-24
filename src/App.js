@@ -1,15 +1,8 @@
 import React, { useState, useEffect } from "react";
 import TradingApp from './TradingApp';
-import { fetchMockData } from './API';
 import "./App.css";
 
 function App() {
-  const [priceData, setPriceData] = useState([]);
-
-  useEffect(() => {
-    fetchMockData().then(setPriceData);
-  }, []);
-
   const [input, setInput] = useState({
     username: "",
     email: "",
@@ -18,7 +11,7 @@ function App() {
 
   const [loginInput, setLoginInput] = useState({
     username: "",
-    password: ""
+    password: "",
   });
 
   const [email, setEmail] = useState("");
