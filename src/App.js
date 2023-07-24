@@ -1,7 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import TradingApp from './TradingApp';
+import { fetchMockData } from './API';
 import "./App.css";
 
 function App() {
+  const [priceData, setPriceData] = useState([]);
+
+  useEffect(() => {
+    fetchMockData().then(setPriceData);
+  }, []);
+
   const [input, setInput] = useState({
     username: "",
     email: "",
@@ -102,6 +110,8 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
+        <TradingApp />
+        <h1>Credentials</h1>
         <input
           type="text"
           value={input.username}
