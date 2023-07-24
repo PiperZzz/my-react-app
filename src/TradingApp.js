@@ -9,6 +9,8 @@ function TradingApp() {
     const [inputAmount, setInputAmount] = useState(null); // User input amount
     const [balance, setBalance] = useState(mockUserData.balance); // User's balance in USD
     const [btc, setBtc] = useState(mockUserData.holdings.BTC); // User's BTC amount
+    const [orders, setOrders] = useState([]); // All orders
+    const [orderId, setOrderId] = useState(0); // ID for the next order
 
     useEffect(() => {
         setLatestPrice(priceData[priceData.length - 1].close);
@@ -19,6 +21,17 @@ function TradingApp() {
         if (cost <= balance) {
             setBalance(balance - cost);
             setBtc(btc + parseFloat(inputAmount));
+
+            // Add the new order
+            const order = {
+                id: orderId,
+                price: inputPrice,
+                amount: inputAmount,
+                type: 'Buy',
+                status: inputPrice >= latestPrice ? 'Completed' : 'Pending'
+            };
+            setOrders([...orders, order]);
+            setOrderId(orderId + 1); // Update the ID for the next order
         } else {
             alert('Not enough balance');
         }
@@ -29,9 +42,25 @@ function TradingApp() {
             const earnings = inputAmount * inputPrice; // Earnings from selling the input amount at the input price
             setBalance(balance + earnings);
             setBtc(btc - parseFloat(inputAmount));
+
+            // Add the new order
+            const order = {
+                id: orderId,
+                price: inputPrice,
+                amount: inputAmount,
+                type: 'Sell',
+                status: inputPrice <= latestPrice ? 'Completed' : 'Pending'
+            };
+            setOrders([...orders, order]);
+            setOrderId(orderId + 1); // Update the ID for the next order
         } else {
             alert('Not enough BTC');
         }
+    };
+
+    const handleCancel = (id) => {
+        // Only cancel the order if its status is 'Pending'
+        setOrders(orders.filter(order => order.id !== id || order.status !== 'Pending'));
     };
 
     return (
@@ -56,6 +85,29 @@ function TradingApp() {
             </div>
             <div>
                 BTC: {btc.toFixed(8)}
+            </div>
+            <div>
+                <h2>Order Details</h2>
+                <table>
+                    <tr>
+                        <th>Type</th>
+                        <th>Price</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                    {orders.map((order, index) => (
+                        <tr key={order.id}>
+                            <td>{order.type}</td>
+                            <td>{order.price}</td>
+                            <td>{order.amount}</td>
+                            <td>{order.status}</td>
+                            <td>
+                            {order.status === 'Pending' && <button onClick={() => handleCancel(order.id)}>Cancel</button>}
+                            </td>
+                        </tr>
+                    ))}
+                </table>
             </div>
         </div>
     );
