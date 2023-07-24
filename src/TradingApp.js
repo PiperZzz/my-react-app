@@ -19,9 +19,9 @@ function TradingApp() {
     const handleBuy = () => {
         const cost = inputAmount * inputPrice; // Cost of buying the input amount at the input price
         if (cost <= balance) {
+            // Deduct the cost from the balance immediately
             setBalance(balance - cost);
-            setBtc(btc + parseFloat(inputAmount));
-
+    
             // Add the new order
             const order = {
                 id: orderId,
@@ -30,38 +30,53 @@ function TradingApp() {
                 type: 'Buy',
                 status: inputPrice >= latestPrice ? 'Completed' : 'Pending'
             };
+    
+            if (order.status === 'Completed') {
+                setBtc(btc + parseFloat(inputAmount));
+            }
+    
             setOrders([...orders, order]);
             setOrderId(orderId + 1); // Update the ID for the next order
         } else {
             alert('Not enough balance');
         }
     };
-
+    
     const handleSell = () => {
-        if (inputAmount <= btc) {
-            const earnings = inputAmount * inputPrice; // Earnings from selling the input amount at the input price
-            setBalance(balance + earnings);
-            setBtc(btc - parseFloat(inputAmount));
-
-            // Add the new order
-            const order = {
-                id: orderId,
-                price: inputPrice,
-                amount: inputAmount,
-                type: 'Sell',
-                status: inputPrice <= latestPrice ? 'Completed' : 'Pending'
-            };
-            setOrders([...orders, order]);
-            setOrderId(orderId + 1); // Update the ID for the next order
-        } else {
-            alert('Not enough BTC');
+        // Add the new order
+        const order = {
+            id: orderId,
+            price: inputPrice,
+            amount: inputAmount,
+            type: 'Sell',
+            status: inputPrice <= latestPrice ? 'Completed' : 'Pending'
+        };
+    
+        if (order.status === 'Completed') {
+            if (inputAmount <= btc) {
+                const earnings = inputAmount * inputPrice; // Earnings from selling the input amount at the input price
+                setBalance(balance + earnings);
+                setBtc(btc - parseFloat(inputAmount));
+            } else {
+                alert('Not enough BTC');
+                return;
+            }
         }
+    
+        setOrders([...orders, order]);
+        setOrderId(orderId + 1); // Update the ID for the next order
     };
-
+    
     const handleCancel = (id) => {
-        // Only cancel the order if its status is 'Pending'
-        setOrders(orders.filter(order => order.id !== id || order.status !== 'Pending'));
-    };
+        const order = orders.find(order => order.id === id);
+        if (order && order.status === 'Pending') {
+            // If the order is pending and is a buy order, refund the balance
+            if (order.type === 'Buy') {
+                setBalance(balance + order.price * order.amount);
+            }
+            setOrders(orders.filter(order => order.id !== id));
+        }
+    };    
 
     return (
         <div>
