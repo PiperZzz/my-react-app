@@ -1,4 +1,4 @@
-const mockData = [
+const mockPriceData = [
     { time: Date.UTC(2023, 6, 23, 0, 0, 0) / 1000, open: 30000, high: 30010, low: 29990, close: 30005 },
     { time: Date.UTC(2023, 6, 23, 0, 1, 0) / 1000, open: 30005, high: 30015, low: 29995, close: 30010 },
     { time: Date.UTC(2023, 6, 23, 0, 2, 0) / 1000, open: 30010, high: 30020, low: 30000, close: 30000 },
@@ -31,4 +31,9 @@ const mockData = [
     { time: Date.UTC(2023, 6, 23, 0, 29, 0) / 1000, open: 30000, high: 30005, low: 29985, close: 29990 },
 ];
 
-export { mockData };
+const mockUserData = {
+    balance: 10000,
+    holdings: { BTC: 0, ETH: 0, LTC: 0 },
+};
+
+export { mockPriceData, mockUserData };

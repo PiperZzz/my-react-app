@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import CryptoChart from './CryptoChart';
-import { mockData } from './API';
+import { mockPriceData } from './API';
 
 function TradingApp() {
-    const data = mockData;
+    const data = mockPriceData;
     const [priceData, setPriceData] = useState([]);
     const [latestPrice, setLatestPrice] = useState(null);
 
