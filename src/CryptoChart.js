@@ -6,8 +6,8 @@ function CryptoChart({ data }) {
 
     useEffect(() => {
         const chart = createChart(chartContainerRef.current, { 
-            width: 400, 
-            height: 300,
+            width: 600, 
+            height: 400,
             timeScale: {
                 tickMarkFormatter: (time, tickMarkType, locale) => {
                     const date = new Date(time * 1000);
@@ -20,12 +20,7 @@ function CryptoChart({ data }) {
         const candleSeries = chart.addCandlestickSeries();
 
         candleSeries.setData(data);
-
-        // Set visible range to start from the first data point
-        // const from = data[0].time;
-        // const to = data[data.length - 1].time;
-        // chart.timeScale().setVisibleRange({ from, to });
-
+        
         return () => chart.remove();
     }, [data]);
 
